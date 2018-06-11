@@ -111,26 +111,26 @@ public class FaultToleranceInterceptor {
         Class<?> targetClass = context.getTarget().getClass();
         Annotation[] annotations = targetClass.getAnnotations();
         for (Annotation annotation : annotations) {
-            // Don't process any annotations which aren't enabled
-            if (!FTGlobalConfig.getActiveAnnotations(targetClass).contains(annotation.annotationType())) {
-                continue;
-            }
 
-            if (annotation.annotationType().equals(Asynchronous.class)) {
-                asynchronous = new AsynchronousConfig(targetClass, (Asynchronous) annotation);
-                asynchronous.validate();
-            } else if (annotation.annotationType().equals(Retry.class)) {
-                retry = new RetryConfig(targetClass, (Retry) annotation);
-                retry.validate();
-            } else if (annotation.annotationType().equals(CircuitBreaker.class)) {
-                circuitBreaker = new CircuitBreakerConfig(targetClass, (CircuitBreaker) annotation);
-                circuitBreaker.validate();
-            } else if (annotation.annotationType().equals(Timeout.class)) {
-                timeout = new TimeoutConfig(targetClass, (Timeout) annotation);
-                timeout.validate();
-            } else if (annotation.annotationType().equals(Bulkhead.class)) {
-                bulkhead = new BulkheadConfig(targetClass, (Bulkhead) annotation);
-                bulkhead.validate();
+            //Check that the annotation has not been disabled for this specific class. 
+            if (FTGlobalConfig.isAnnotationEnabled(annotation, targetClass)) { 
+
+                if (annotation.annotationType().equals(Asynchronous.class)) {
+                    asynchronous = new AsynchronousConfig(targetClass, (Asynchronous) annotation);
+                    asynchronous.validate();
+                } else if (annotation.annotationType().equals(Retry.class)) {
+                    retry = new RetryConfig(targetClass, (Retry) annotation);
+                    retry.validate();
+                } else if (annotation.annotationType().equals(CircuitBreaker.class)) {
+                    circuitBreaker = new CircuitBreakerConfig(targetClass, (CircuitBreaker) annotation);
+                    circuitBreaker.validate();
+                } else if (annotation.annotationType().equals(Timeout.class)) {
+                    timeout = new TimeoutConfig(targetClass, (Timeout) annotation);
+                    timeout.validate();
+                } else if (annotation.annotationType().equals(Bulkhead.class)) {
+                    bulkhead = new BulkheadConfig(targetClass, (Bulkhead) annotation);
+                    bulkhead.validate();
+                }
             }
         }
 
@@ -139,29 +139,29 @@ public class FaultToleranceInterceptor {
         Method method = context.getMethod();
         annotations = method.getAnnotations();
         for (Annotation annotation : annotations) {
-            // Don't process any annotations which aren't enabled
-            if (!FTGlobalConfig.getActiveAnnotations(targetClass).contains(annotation.annotationType())) {
-                continue;
-            }
 
-            if (annotation.annotationType().equals(Asynchronous.class)) {
-                asynchronous = new AsynchronousConfig(method, targetClass, (Asynchronous) annotation);
-                asynchronous.validate();
-            } else if (annotation.annotationType().equals(Retry.class)) {
-                retry = new RetryConfig(method, targetClass, (Retry) annotation);
-                retry.validate();
-            } else if (annotation.annotationType().equals(CircuitBreaker.class)) {
-                circuitBreaker = new CircuitBreakerConfig(method, targetClass, (CircuitBreaker) annotation);
-                circuitBreaker.validate();
-            } else if (annotation.annotationType().equals(Timeout.class)) {
-                timeout = new TimeoutConfig(method, targetClass, (Timeout) annotation);
-                timeout.validate();
-            } else if (annotation.annotationType().equals(Bulkhead.class)) {
-                bulkhead = new BulkheadConfig(method, targetClass, (Bulkhead) annotation);
-                bulkhead.validate();
-            } else if (annotation.annotationType().equals(Fallback.class)) {
-                fallback = new FallbackConfig(method, targetClass, (Fallback) annotation);
-                fallback.validate();
+            //Check that the annotation has not been disabled for this specific method. 
+            if (FTGlobalConfig.isAnnotationEnabled(annotation, targetClass, method)) { 
+
+                if (annotation.annotationType().equals(Asynchronous.class)) {
+                    asynchronous = new AsynchronousConfig(method, targetClass, (Asynchronous) annotation);
+                    asynchronous.validate();
+                } else if (annotation.annotationType().equals(Retry.class)) {
+                    retry = new RetryConfig(method, targetClass, (Retry) annotation);
+                    retry.validate();
+                } else if (annotation.annotationType().equals(CircuitBreaker.class)) {
+                    circuitBreaker = new CircuitBreakerConfig(method, targetClass, (CircuitBreaker) annotation);
+                    circuitBreaker.validate();
+                } else if (annotation.annotationType().equals(Timeout.class)) {
+                    timeout = new TimeoutConfig(method, targetClass, (Timeout) annotation);
+                    timeout.validate();
+                } else if (annotation.annotationType().equals(Bulkhead.class)) {
+                    bulkhead = new BulkheadConfig(method, targetClass, (Bulkhead) annotation);
+                    bulkhead.validate();
+                } else if (annotation.annotationType().equals(Fallback.class)) {
+                    fallback = new FallbackConfig(method, targetClass, (Fallback) annotation);
+                    fallback.validate();
+                }
             }
         }
 
